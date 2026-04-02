@@ -216,14 +216,7 @@
       gap: 3px;
     }
 
-    /* Image → body transition fade */
-    .card__img-fade {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 60px;
-      background: linear-gradient(to bottom, transparent, var(--card-bg));
-      transition: background 0.5s ease;
-    }
+
 
     /* ── Body ── */
     .card__body {
@@ -246,8 +239,8 @@
       transition: background 0.5s ease;
     }
 
-    /* All body children sit above color layer */
-    .card__body > * { position: relative; z-index: 1; }
+    /* All body children sit ABOVE the color layer — exclude the layer itself */
+    .card__body > *:not(.card__color-layer) { position: relative; z-index: 1; }
 
     .card__title {
       font-size: 1.05rem;
@@ -295,87 +288,6 @@
       flex: 1;
     }
 
-    /* 预约 button — PC233 Figma 规范精准还原 */
-    .card__btn {
-      position: relative;  /* for ::before stroke layer */
-      width: 100%;
-      padding: 11px 0;
-      border-radius: var(--radius);
-      border: none;
-      font-size: 0.875rem;  /* 14px */
-      font-weight: 700;
-      font-family: 'Microsoft YaHei UI', 'Microsoft YaHei', inherit;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      overflow: hidden; /* clip ::before */
-      transition: background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease;
-
-      /* Default: 饱和主色 + 顶部中心高亮辐射 */
-      background:
-        radial-gradient(140% 200% at 50% -0.1%, #FF7210BF 0%, #A63D0500 100%),
-        #A63D05B2;
-      /* 外投影 (极强存在感) */
-      box-shadow: 0 12px 21px 0 #A63D0566;
-      /* 文本: 白色 80% */
-      color: rgba(255,255,255,0.80);
-    }
-
-    /* 0.5px 内描边 — 顶部放射光晕 + 垂直光框 */
-    .card__btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      padding: 0.5px;
-      border-radius: var(--radius);
-      background:
-        radial-gradient(100% 200% at 50% 0%, #FFF5E8FF 0%, #FFCA9200 100%),
-        linear-gradient(180deg, #FFDFC980 0%, #FFDFC94D 100%);
-      /* mask trick: only render the border edge */
-      -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    /* Hover: 全亮度提升 */
-    .card__btn:hover {
-      background:
-        radial-gradient(140% 200% at 50% -0.1%, #FF7210E5 0%, #A63D0500 100%),
-        #A63D05E5;
-      color: rgba(255,255,255,1.0);
-    }
-
-    /* Pressed/Active: 亮度内缩，取消顶光 */
-    .card__btn:active {
-      background:
-        radial-gradient(140% 200% at 50% -0.1%, #FF721080 0%, #A63D0500 100%),
-        #A63D0566;
-      box-shadow: 0 6px 10.5px 0 #A63D0566;
-      color: rgba(255,255,255,0.60);
-      transform: scale(0.99);
-    }
-
-    /* Pressed inner stroke: 彻底剥离发光，仅留线性基础框 */
-    .card__btn:active::before {
-      background: linear-gradient(180deg, #FFDFC980 0%, #FFDFC94D 100%);
-    }
-
-    /* Disabled: 灰化、无阴影 */
-    .card__btn:disabled {
-      background: #A63D0533;
-      box-shadow: none;
-      color: rgba(255,255,255,0.20);
-      cursor: not-allowed;
-    }
-
-    .card__btn:disabled::before {
-      background: linear-gradient(180deg, #FFDFC933 0%, #FFDFC91A 100%);
-    }
 
     /* ── Palette slots ── */
     .card__palette {
@@ -420,7 +332,11 @@
     }
     .tooltip.show { opacity: 1; transform: translateY(0); }
   </style>
-</head>
+<style id="antigravity-scroll-lock-style">
+  html:root body.antigravity-scroll-lock {
+    overflow: hidden !important;
+  }
+</style></head>
 <body>
 
   <div style="max-width:1060px;margin:0 auto">
@@ -451,7 +367,133 @@
       </div>
     </div>
 
-    <main class="grid" id="grid"></main>
+    <main class="grid" id="grid"><article class="card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.4s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); border-color: rgba(13, 26, 39, 0.3);">
+        <div class="card__cover">
+          
+          <img crossorigin="anonymous" alt="Resident Evil Requiem" src="https://picsum.photos/seed/cyberpunk/800/500" class="loaded">
+          <div class="card__score">★ 9.2</div>
+        </div>
+        <div class="card__body" style="background: rgb(2, 4, 6);">
+          <div class="card__color-layer" style="background: radial-gradient(at 50% 0%, rgba(13, 26, 39, 0.28) 0%, rgba(13, 26, 39, 0.098) 45%, rgba(13, 26, 39, 0) 100%);"></div>
+          <h2 class="card__title">Resident Evil Requiem</h2>
+          <div class="card__date">发行日期：2026年5月20日</div>
+          <div class="card__tags">
+            <span class="card__tag card__tag--vibrant" style="border-color: rgba(26, 52, 78, 0.5); color: rgb(26, 52, 78);">独家</span><span class="card__tag">第三人称</span><span class="card__tag">恐怖</span>
+          </div>
+          <p class="card__desc">予生者恐惧，给亡者安魂——生化危机系列全新篇章，背水一战的生存恐怖</p>
+          <div class="card__palette">
+            <div class="swatch" data-hex="#1a344e" style="background: rgb(26, 52, 78); border-color: rgb(2, 4, 6);"></div><div class="swatch" data-hex="#1a1a1a" style="background: rgb(26, 26, 26); border-color: rgb(2, 4, 6);"></div>
+            <div class="swatch" data-hex="#9cb6b6" style="background: rgb(156, 182, 182); border-color: rgb(2, 4, 6);"></div><div class="swatch" data-hex="#d0d0d0" style="background: rgb(208, 208, 208); border-color: rgb(2, 4, 6);"></div>
+            <div class="swatch" data-hex="#4e6868" style="background: rgb(78, 104, 104); border-color: rgb(2, 4, 6);"></div>
+            <span class="palette-hint">提取色板</span>
+          </div>
+        </div>
+      </article><article class="card" style="opacity: 1; transform: translateY(0px); border-color: rgba(65, 52, 39, 0.3); transition: opacity 0.4s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);">
+        <div class="card__cover">
+          
+          <img crossorigin="anonymous" alt="检疫区：最后一站" src="https://picsum.photos/seed/horror/800/500" class="loaded">
+          <div class="card__score">★ 9.2</div>
+        </div>
+        <div class="card__body" style="background: rgb(10, 8, 6);">
+          <div class="card__color-layer" style="background: radial-gradient(at 50% 0%, rgba(65, 52, 39, 0.28) 0%, rgba(65, 52, 39, 0.098) 45%, rgba(65, 52, 39, 0) 100%);"></div>
+          <h2 class="card__title">检疫区：最后一站</h2>
+          <div class="card__date">发行日期：2026年4月15日</div>
+          <div class="card__tags">
+            <span class="card__tag card__tag--vibrant" style="border-color: rgba(130, 104, 78, 0.5); color: rgb(130, 104, 78);">开放世界</span><span class="card__tag">角色扮演</span>
+          </div>
+          <p class="card__desc">在一座濒临崩溃的城市里指挥检查站，筛查幸存者，维持秩序直到援军到来</p>
+          <div class="card__palette">
+            <div class="swatch" data-hex="#eaead0" style="background: rgb(234, 234, 208); border-color: rgb(10, 8, 6);"></div><div class="swatch" data-hex="#1a1a1a" style="background: rgb(26, 26, 26); border-color: rgb(10, 8, 6);"></div>
+            <div class="swatch" data-hex="#b6d0d0" style="background: rgb(182, 208, 208); border-color: rgb(10, 8, 6);"></div><div class="swatch" data-hex="#4e4e34" style="background: rgb(78, 78, 52); border-color: rgb(10, 8, 6);"></div>
+            <div class="swatch" data-hex="#82684e" style="background: rgb(130, 104, 78); border-color: rgb(10, 8, 6);"></div>
+            <span class="palette-hint">提取色板</span>
+          </div>
+        </div>
+      </article><article class="card" style="opacity: 1; transform: translateY(0px); border-color: rgba(91, 65, 39, 0.3); transition: opacity 0.4s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);">
+        <div class="card__cover">
+          
+          <img crossorigin="anonymous" alt="荒野大镖客" src="https://picsum.photos/seed/western/800/500" class="loaded">
+          <div class="card__score">★ 9.8</div>
+        </div>
+        <div class="card__body" style="background: rgb(14, 10, 6);">
+          <div class="card__color-layer" style="background: radial-gradient(at 50% 0%, rgba(91, 65, 39, 0.28) 0%, rgba(91, 65, 39, 0.098) 45%, rgba(91, 65, 39, 0) 100%);"></div>
+          <h2 class="card__title">荒野大镖客</h2>
+          <div class="card__date">发行日期：已发售</div>
+          <div class="card__tags">
+            <span class="card__tag card__tag--vibrant" style="border-color: rgba(182, 130, 78, 0.5); color: rgb(182, 130, 78);">动作冒险</span><span class="card__tag">开放世界</span>
+          </div>
+          <p class="card__desc">在广袤的美国西部，体验一段关于荣耀与救赎的史诗传奇，开放世界经典之作</p>
+          <div class="card__palette">
+            <div class="swatch" data-hex="#b69c82" style="background: rgb(182, 156, 130); border-color: rgb(14, 10, 6);"></div><div class="swatch" data-hex="#d0d0d0" style="background: rgb(208, 208, 208); border-color: rgb(14, 10, 6);"></div>
+            <div class="swatch" data-hex="#826868" style="background: rgb(130, 104, 104); border-color: rgb(14, 10, 6);"></div><div class="swatch" data-hex="#b6824e" style="background: rgb(182, 130, 78); border-color: rgb(14, 10, 6);"></div>
+            <div class="swatch" data-hex="#4e3434" style="background: rgb(78, 52, 52); border-color: rgb(14, 10, 6);"></div>
+            <span class="palette-hint">提取色板</span>
+          </div>
+        </div>
+      </article><article class="card" style="opacity: 1; transform: translateY(0px); border-color: rgba(52, 39, 26, 0.3); transition: opacity 0.4s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);">
+        <div class="card__cover">
+          
+          <img crossorigin="anonymous" alt="HADES II" src="https://picsum.photos/seed/fantasy/800/500" class="loaded">
+          <div class="card__score">★ 9.5</div>
+        </div>
+        <div class="card__body" style="background: rgb(8, 6, 4);">
+          <div class="card__color-layer" style="background: radial-gradient(at 50% 0%, rgba(52, 39, 26, 0.28) 0%, rgba(52, 39, 26, 0.098) 45%, rgba(52, 39, 26, 0) 100%);"></div>
+          <h2 class="card__title">HADES II</h2>
+          <div class="card__date">发行日期：2026年6月1日</div>
+          <div class="card__tags">
+            <span class="card__tag card__tag--vibrant" style="border-color: rgba(104, 78, 52, 0.5); color: rgb(104, 78, 52);">俯视角</span><span class="card__tag">Rogue-like</span>
+          </div>
+          <p class="card__desc">斯提克斯女神踏上无尽征途，与时间泰坦展开史诗对决，Rogue-like 新标杆</p>
+          <div class="card__palette">
+            <div class="swatch" data-hex="#343434" style="background: rgb(52, 52, 52); border-color: rgb(8, 6, 4);"></div><div class="swatch" data-hex="#686868" style="background: rgb(104, 104, 104); border-color: rgb(8, 6, 4);"></div>
+            <div class="swatch" data-hex="#9c9c9c" style="background: rgb(156, 156, 156); border-color: rgb(8, 6, 4);"></div><div class="swatch" data-hex="#684e34" style="background: rgb(104, 78, 52); border-color: rgb(8, 6, 4);"></div>
+            <div class="swatch" data-hex="#9c8268" style="background: rgb(156, 130, 104); border-color: rgb(8, 6, 4);"></div>
+            <span class="palette-hint">提取色板</span>
+          </div>
+        </div>
+      </article><article class="card" style="opacity: 1; transform: translateY(0px); border-color: rgba(39, 13, 26, 0.3); transition: opacity 0.4s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);">
+        <div class="card__cover">
+          
+          <img crossorigin="anonymous" alt="赛博朋克 2077" src="https://picsum.photos/seed/neon/800/500" class="loaded">
+          <div class="card__score">★ 8.9</div>
+        </div>
+        <div class="card__body" style="background: rgb(6, 2, 4);">
+          <div class="card__color-layer" style="background: radial-gradient(at 50% 0%, rgba(39, 13, 26, 0.28) 0%, rgba(39, 13, 26, 0.098) 45%, rgba(39, 13, 26, 0) 100%);"></div>
+          <h2 class="card__title">赛博朋克 2077</h2>
+          <div class="card__date">发行日期：已发售</div>
+          <div class="card__tags">
+            <span class="card__tag card__tag--vibrant" style="border-color: rgba(78, 26, 52, 0.5); color: rgb(78, 26, 52);">角色扮演</span><span class="card__tag">开放世界</span>
+          </div>
+          <p class="card__desc">夜之城，一个痴迷于权力、魅力与改造身体的大都市，V 的传奇在霓虹灯下展开</p>
+          <div class="card__palette">
+            <div class="swatch" data-hex="#d0d0b6" style="background: rgb(208, 208, 182); border-color: rgb(6, 2, 4);"></div><div class="swatch" data-hex="#826882" style="background: rgb(130, 104, 130); border-color: rgb(6, 2, 4);"></div>
+            <div class="swatch" data-hex="#9c9c9c" style="background: rgb(156, 156, 156); border-color: rgb(6, 2, 4);"></div><div class="swatch" data-hex="#684e4e" style="background: rgb(104, 78, 78); border-color: rgb(6, 2, 4);"></div>
+            <div class="swatch" data-hex="#4e1a34" style="background: rgb(78, 26, 52); border-color: rgb(6, 2, 4);"></div>
+            <span class="palette-hint">提取色板</span>
+          </div>
+        </div>
+      </article><article class="card" style="opacity: 1; transform: translateY(0px); border-color: rgba(13, 52, 52, 0.3); transition: opacity 0.4s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);">
+        <div class="card__cover">
+          
+          <img crossorigin="anonymous" alt="怪物猎人 荒野" src="https://picsum.photos/seed/monster/800/500" class="loaded">
+          <div class="card__score">★ 9.1</div>
+        </div>
+        <div class="card__body" style="background: rgb(2, 8, 8);">
+          <div class="card__color-layer" style="background: radial-gradient(at 50% 0%, rgba(13, 52, 52, 0.28) 0%, rgba(13, 52, 52, 0.098) 45%, rgba(13, 52, 52, 0) 100%);"></div>
+          <h2 class="card__title">怪物猎人 荒野</h2>
+          <div class="card__date">发行日期：2026年3月28日</div>
+          <div class="card__tags">
+            <span class="card__tag card__tag--vibrant" style="border-color: rgba(26, 104, 104, 0.5); color: rgb(26, 104, 104);">动作</span><span class="card__tag">合作</span>
+          </div>
+          <p class="card__desc">踏入充满危险与奇迹的未知荒野，追猎巨大怪物，共创属于你的狩猎传说</p>
+          <div class="card__palette">
+            <div class="swatch" data-hex="#4e684e" style="background: rgb(78, 104, 78); border-color: rgb(2, 8, 8);"></div><div class="swatch" data-hex="#343434" style="background: rgb(52, 52, 52); border-color: rgb(2, 8, 8);"></div>
+            <div class="swatch" data-hex="#828268" style="background: rgb(130, 130, 104); border-color: rgb(2, 8, 8);"></div><div class="swatch" data-hex="#b6b69c" style="background: rgb(182, 182, 156); border-color: rgb(2, 8, 8);"></div>
+            <div class="swatch" data-hex="#1a6868" style="background: rgb(26, 104, 104); border-color: rgb(2, 8, 8);"></div>
+            <span class="palette-hint">提取色板</span>
+          </div>
+        </div>
+      </article></main>
   </div>
 
   <div class="tooltip" id="tip"></div>
@@ -614,10 +656,7 @@
       // Card border tint
       card.style.borderColor = rgba(dimmed, 0.30);
 
-      // Image → body fade: dark extracted color
       const dr=Math.round(r*0.15), dg=Math.round(g*0.15), db=Math.round(b*0.15);
-      card.querySelector('.card__img-fade').style.background =
-        `linear-gradient(to bottom, transparent, rgb(${dr},${dg},${db}))`;
 
       // Radial gradient color layer (inside the card body)
       const op=CFG.opacity, op2=op*0.35;
@@ -657,7 +696,6 @@
         <div class="card__cover">
           <div class="card__skeleton"></div>
           <img crossorigin="anonymous" alt="${meta.title}">
-          <div class="card__img-fade"></div>
           <div class="card__score">★ ${meta.score}</div>
         </div>
         <div class="card__body">
@@ -674,7 +712,6 @@
             <div class="swatch"></div>
             <span class="palette-hint">提取色板</span>
           </div>
-          <button class="card__btn">预约</button>
         </div>
       `;
 
@@ -744,4 +781,6 @@
 
     render(SEEDS[setIdx]);
   </script>
-</body></html>
+
+
+<div id="preact-border-shadow-host" popover="manual" style="border: none; padding: 0px; margin: 0px; inset: 0px; position: fixed; width: 100vw; height: 100vh; background: transparent; pointer-events: none;"></div></body></html>
