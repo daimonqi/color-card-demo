@@ -1,579 +1,214 @@
-<html lang="zh-CN"><head>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>图片取色 · 卡片径向背景</title>
-  <meta name="description" content="从图片提取主色，作为卡片内部的径向渐变背景色">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <title>图库 Demo · Figma 还原</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #08080c;
-      --text-primary: rgba(255,255,255,0.95);
-      --text-secondary: rgba(255,255,255,0.50);
-      --text-muted: rgba(255,255,255,0.22);
-      --radius: 16px;
+      --bg: #0B0B0F;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(255, 255, 255, 0.15);
+      --primary: linear-gradient(135deg, #FF7A00 0%, #FF4D00 100%);
+      --radius: 4px;
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: var(--bg);
-      color: var(--text-primary);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      padding: 60px 36px 100px;
-    }
-
-    /* ── Header ── */
-    .header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
-
-    .header__badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 14px;
-      border-radius: 100px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      font-size: 0.72rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-
-    .header__badge::before {
-      content: '';
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: #818cf8;
-      box-shadow: 0 0 8px #818cf8;
-    }
-
-    .header h1 {
-      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
-      font-weight: 700;
-      letter-spacing: -0.025em;
       color: #fff;
-      margin-bottom: 12px;
+      font-family: "Microsoft YaHei UI", "Inter", sans-serif;
+      padding: 60px 40px;
+      min-height: 100vh;
     }
 
-    .header p {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      max-width: 420px;
-      margin: 0 auto 26px;
-      line-height: 1.6;
-    }
-
-    .btn-refresh {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 22px;
-      border-radius: 100px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--text-primary);
-      font-size: 0.86rem;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.22s ease;
-      outline: none;
-    }
-    .btn-refresh:hover { background: rgba(255,255,255,0.11); transform: translateY(-1px); }
-    .btn-refresh svg { transition: transform 0.5s ease; }
-    .btn-refresh.spinning svg { animation: spin 0.6s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Grid ── */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 20px;
-      max-width: 1080px;
+    .container {
+      max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* ── Card ── */
-    .card {
-      border-radius: var(--radius);
-      overflow: hidden;
-      cursor: pointer;
-      position: relative;
-      background: #0e0e14;
-      border: 1px solid rgba(255,255,255,0.07);
-      transition: transform 0.38s cubic-bezier(0.22,1,0.36,1),
-                  border-color 0.5s ease;
+    .section-header {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
     }
 
-    .card:hover { transform: translateY(-4px) scale(1.005); }
+    .section-header::before {
+      content: "";
+      width: 4px;
+      height: 24px;
+      background: #FF7A00;
+      border-radius: 2px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(297px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      width: 297.5px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(50px);
+      transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover { transform: translateY(-5px); }
 
     .card__img-wrap {
-      position: relative;
-      height: 205px;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 4px;
       overflow: hidden;
-      background: #111118;
+      position: relative;
+      background: #111;
     }
 
     .card__img-wrap img {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      display: block;
-      opacity: 0;
-      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22,1,0.36,1);
-    }
-    .card__img-wrap img.loaded { opacity: 1; }
-    .card:hover .card__img-wrap img { transform: scale(1.04); }
-
-    .card__skeleton {
-      position: absolute; inset: 0;
-      background: linear-gradient(90deg, #111118 25%, #1a1a24 50%, #111118 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    .card__img-fade {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 64px;
-      background: linear-gradient(to bottom, transparent, #0e0e14);
-      transition: background 0.5s ease;
     }
 
     .card__score {
       position: absolute;
-      top: 10px; right: 10px;
-      padding: 3px 9px;
-      border-radius: 7px;
+      top: 8px; right: 8px;
+      padding: 2px 8px;
       background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(8px);
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    .card__body {
-      position: relative;
-      padding: 16px 18px 18px;
-      background: transparent;
-      transition: background 0.6s ease;
-    }
-
-    .card__color-layer {
+    .card__color-bg {
       position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(ellipse at 50% 0%, transparent 0%, transparent 100%);
+      bottom: 0; left: 0; right: 0; height: 60%;
+      pointer-events: none; z-index: 0;
       transition: background 0.6s ease;
-      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    .card__info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1;
+    }
+
+    .card__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .card__date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
     }
 
     .card__tags {
       display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
+      gap: 8px;
     }
 
     .card__tag {
-      padding: 3px 9px;
-      border-radius: 6px;
-      font-size: 0.67rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      border: 1px solid transparent;
-      transition: background 0.5s, color 0.5s, border-color 0.5s;
-    }
-
-    .card__tag--secondary {
-      background: rgba(255,255,255,0.06);
-      color: rgba(255,255,255,0.5);
-      border-color: rgba(255,255,255,0.1);
-    }
-
-    .card__title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 5px;
-      letter-spacing: -0.01em;
-      position: relative;
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .card__desc {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      line-height: 1.55;
-      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.8);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      position: relative;
     }
 
-    .card__palette {
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-
-    .swatch {
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      border: 2px solid #0e0e14;
-      margin-right: -6px;
-      flex-shrink: 0;
-      transition: transform 0.2s, margin 0.22s;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    .card__btn {
+      height: 48px;
+      background: var(--primary);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-weight: 700;
       cursor: pointer;
-    }
-    .card__palette:hover .swatch { margin-right: 3px; }
-    .swatch:hover { transform: scale(1.3) translateY(-2px); z-index: 4; }
-
-    .palette-label {
-      margin-left: auto;
-      font-size: 0.68rem;
-      color: var(--text-muted);
-    }
-
-    .tooltip {
-      position: fixed;
-      padding: 5px 11px;
-      border-radius: 7px;
-      font-size: 0.76rem;
-      font-weight: 500;
-      pointer-events: none;
-      opacity: 0;
-      transform: translateY(4px);
-      transition: opacity 0.12s, transform 0.12s;
-      z-index: 9999;
-      white-space: nowrap;
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-    .tooltip.show { opacity: 1; transform: translateY(0); }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
-    }
-
-    .ctrl-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 18px;
-      border-radius: 100px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.09);
-    }
-
-    .ctrl-item label {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.5);
-      white-space: nowrap;
-    }
-
-    .ctrl-item input[type=range] {
-      -webkit-appearance: none;
-      width: 96px; height: 3px;
-      border-radius: 2px;
-      background: rgba(255,255,255,0.15);
-      outline: none;
-      cursor: pointer;
-    }
-    .ctrl-item input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: #818cf8;
-      box-shadow: 0 0 6px rgba(129,140,248,0.6);
-      cursor: pointer;
-    }
-
-    .ctrl-val {
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.7);
-      min-width: 32px;
-      text-align: right;
     }
   </style>
 </head>
 <body>
-
-  <div style="max-width:1080px;margin:0 auto">
-    <header class="header">
-      <div class="header__badge">Canvas API · 径向渐变背景</div>
-      <h1>图片取色 · 卡片内径向背景</h1>
-      <p>从图片提取主色，作为卡片信息区的径向渐变底色<br>
-         <code style="font-size:0.8em;background:rgba(255,255,255,0.07);padding:2px 8px;border-radius:5px">
-           radial-gradient(ellipse, color 0% → transparent 100%)
-         </code>
-      </p>
-      <button class="btn-refresh" id="btnRefresh" onclick="loadNew()">
-        <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
-          <path d="M1.5 7.5C1.5 4.186 4.186 1.5 7.5 1.5a6 6 0 0 1 5.196 3H10.5a.75.75 0 0 0 0 1.5h3.75V2.25a.75.75 0 0 0-1.5 0v1.54A7.5 7.5 0 1 0 15 7.5a.75.75 0 0 0-1.5 0A6 6 0 0 1 1.5 7.5Z" fill="currentColor"></path>
-        </svg>
-        换一批图片
-      </button>
-    </header>
-
-    <div class="controls">
-      <div class="ctrl-item">
-        <label>渐变透明度</label>
-        <input type="range" id="sliderOpacity" min="0" max="60" value="28" oninput="onSlider()">
-        <span class="ctrl-val" id="valOpacity">28%</span>
-      </div>
-      <div class="ctrl-item">
-        <label>HSB 明度压暗</label>
-        <input type="range" id="sliderBright" min="10" max="100" value="50" oninput="onSlider()">
-        <span class="ctrl-val" id="valBright">50%</span>
-      </div>
-    </div>
-
+  <div class="container">
+    <header class="section-header">为您推荐</header>
     <main class="cards-grid" id="grid"></main>
   </div>
-
-  <div class="tooltip" id="tip"></div>
-
+  <canvas id="extraction-canvas" style="display:none"></canvas>
   <script>
-    const CARDS = [
-      { title: 'Resident Evil Requiem', desc: '予生者恐惧，给亡者安魂——生化危机系列全新章节', tags: ['独家', '第三人称'], score: '9.2' },
-      { title: '检疫区：最后一站',     desc: '在濒临崩溃的城市里指挥检查站，筛查幸存者',       tags: ['开放世界', '角色扮演'], score: '9.2' },
-      { title: '荒野大镖客',           desc: '在广袤的美国西部，体验一段关于荣耀与救赎的传奇',  tags: ['动作冒险', '开放世界'], score: '9.8' },
-      { title: 'HADES II',             desc: '斯提克斯女神踏上无尽征途，与时间泰坦史诗对决',   tags: ['俯视角', 'Rogue-like'], score: '9.5' },
-      { title: '赛博朋克 2077',         desc: '夜之城，一个痴迷于权力、魅力与改造的大都市',    tags: ['角色扮演', '独家'],     score: '8.9' },
-      { title: '怪物猎人 荒野',         desc: '踏入充满危险与奇迹的未知荒野，追猎巨大怪物',    tags: ['动作', '合作'],         score: '9.1' },
+    const DATA = [
+      { title: "Resident Evil", date: "2026年3月10日", desc: "予生者恐惧，给亡者安魂", tags: ["动作", "Rogue"], score: "9.2", seed: "horror" },
+      { title: "Galactic Vault", date: "2026年3月12日", desc: "打造你的极致射击体验", tags: ["FPS", "Rogue"], score: "9.8", seed: "space" },
+      { title: "High Risk", date: "2026年3月11日", desc: "押上你的全部资金", tags: ["投资", "Rogue"], score: "9.1", seed: "money" }
     ];
 
-    const SEEDS = [
-      ['cyberpunk','horror','western','fantasy','neon','monster'],
-      ['forest','ocean','desert','space','city','mountain'],
-      ['fire','ice','storm','night','dawn','fog'],
-      ['action','anime','scifi','dark','bright','abstract'],
-    ];
-
-    let setIdx = 0;
-    let CFG = { opacity: 0.28, bright: 0.50 };
-    const cardPalettes = [];
-
-    function onSlider() {
-      const op = parseInt(document.getElementById('sliderOpacity').value);
-      const br = parseInt(document.getElementById('sliderBright').value);
-      document.getElementById('valOpacity').textContent = op + '%';
-      document.getElementById('valBright').textContent = br + '%';
-      CFG.opacity = op / 100;
-      CFG.bright  = br / 100;
-      document.querySelectorAll('.card').forEach((card, i) => {
-        if (cardPalettes[i]) paint(card, cardPalettes[i]);
-      });
-    }
-
-    function rgbToHsb(r, g, b) {
-      r /= 255; g /= 255; b /= 255;
-      const max = Math.max(r, g, b), min = Math.min(r, g, b);
-      const delta = max - min;
-      let h = 0;
-      if (delta > 0) {
-        if      (max === r) h = ((g - b) / delta + 6) % 6;
-        else if (max === g) h = (b - r) / delta + 2;
-        else                h = (r - g) / delta + 4;
-        h *= 60;
-      }
-      return { h, s: max === 0 ? 0 : delta / max, b: max };
-    }
-
-    function hsbToRgb(h, s, bv) {
-      const c = bv * s;
-      const x = c * (1 - Math.abs((h / 60) % 2 - 1));
-      const m = bv - c;
-      let r = 0, g = 0, b = 0;
-      if      (h < 60)  { r=c; g=x; }
-      else if (h < 120) { r=x; g=c; }
-      else if (h < 180) { g=c; b=x; }
-      else if (h < 240) { g=x; b=c; }
-      else if (h < 300) { r=x; b=c; }
-      else              { r=c; b=x; }
-      return [Math.round((r+m)*255), Math.round((g+m)*255), Math.round((b+m)*255)];
-    }
-
-    function dimColor([r, g, b]) {
-      const hsb = rgbToHsb(r, g, b);
-      const newB = hsb.b * CFG.bright;
-      return hsbToRgb(hsb.h, hsb.s, newB);
-    }
-
-    function extractPalette(img, n = 6) {
-      const cv = document.createElement('canvas');
-      cv.width = cv.height = 80;
-      const cx = cv.getContext('2d');
-      try {
-        cx.drawImage(img, 0, 0, 80, 80);
-        const d = cx.getImageData(0, 0, 80, 80).data;
-        const step = 26, buckets = {};
-        for (let i = 0; i < d.length; i += 4) {
-          if (d[i+3] < 100) continue;
-          const lum = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
-          if (lum < 18 || lum > 238) continue;
-          const k = `${Math.round(d[i]/step)*step},${Math.round(d[i+1]/step)*step},${Math.round(d[i+2]/step)*step}`;
-          buckets[k] = (buckets[k]||0) + 1;
-        }
-        const sorted = Object.entries(buckets).sort((a,b)=>b[1]-a[1]);
-        if (!sorted.length) return fallback();
-        const pal = [];
-        for (const [k] of sorted) {
-          const c = k.split(',').map(Number);
-          if (!pal.some(p => Math.abs(c[0]-p[0])<step*2 && Math.abs(c[1]-p[1])<step*2 && Math.abs(c[2]-p[2])<step*2))
-            pal.push(c);
-          if (pal.length >= n) break;
-        }
-        while (pal.length < n) pal.push(pal[0]||[100,80,200]);
-        return pal;
-      } catch { return fallback(); }
-    }
-
-    function fallback() { return [[120,80,200],[60,140,220],[200,80,120],[80,180,140],[220,140,60],[140,100,200]]; }
-
-    function vibrant(pal) {
-      let best = pal[0], bs = -1;
-      for (const [r,g,b] of pal) {
-        const mx=Math.max(r,g,b), mn=Math.min(r,g,b);
-        const sat = mx===0 ? 0 : (mx-mn)/mx;
-        const lu = (0.299*r+0.587*g+0.114*b)/255;
-        const sc = sat * (lu>0.08 && lu<0.92 ? 1 : 0.35);
-        if (sc>bs) { bs=sc; best=[r,g,b]; }
-      }
-      return best;
-    }
-
-    const hex = ([r,g,b]) => '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
-    const rgba = ([r,g,b],a) => `rgba(${r},${g},${b},${a})`;
-
-    function paint(card, pal) {
-      const vib = vibrant(pal);
-      const dimmed = dimColor(vib);
-      const [r, g, b] = dimmed;
-      card.style.borderColor = rgba(dimmed, 0.35);
-      const dr = Math.round(r*0.18), dg = Math.round(g*0.18), db = Math.round(b*0.18);
-      card.querySelector('.card__img-fade').style.background = `linear-gradient(to bottom, transparent, rgb(${dr},${dg},${db}))`;
-      const op = CFG.opacity;
-      const op2 = op * 0.36;
-      const colorLayer = card.querySelector('.card__color-layer');
-      colorLayer.style.background = `radial-gradient(ellipse at 50% 0%, ${rgba(dimmed, op)} 0%, ${rgba(dimmed, op2)} 40%, ${rgba(dimmed, 0)} 100%)`;
-      card.querySelector('.card__body').style.background = `rgb(${dr},${dg},${db})`;
-      const tag = card.querySelector('.card__tag--primary');
-      tag.style.background = rgba(vib, 0.18);
-      tag.style.borderColor = rgba(vib, 0.45);
-      tag.style.color = rgba(vib, 1);
-      pal.slice(0, 5).forEach((c, i) => {
-        const s = card.querySelectorAll('.swatch')[i];
-        if (!s) return;
-        s.style.background = `rgb(${c[0]},${c[1]},${c[2]})`;
-        s.dataset.hex = hex(c);
-        s.style.border = `2px solid rgb(${dr},${dg},${db})`;
-      });
-    }
-
-    function makeCard(meta, seed) {
-      const card = document.createElement('article');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="card__img-wrap">
-          <div class="card__skeleton"></div>
-          <img crossorigin="anonymous" alt="${meta.title}">
-          <div class="card__img-fade"></div>
-          <div class="card__score">★ ${meta.score}</div>
-        </div>
-        <div class="card__body">
-          <div class="card__color-layer"></div>
-          <div class="card__tags">
-            <span class="card__tag card__tag--primary">${meta.tags[0]}</span>
-            ${meta.tags[1]?`<span class="card__tag card__tag--secondary">${meta.tags[1]}</span>`:''}
+    function render() {
+      const grid = document.getElementById("grid");
+      DATA.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="card__img-wrap">
+            <img crossorigin="anonymous" src="https://picsum.photos/seed/${item.seed}/800/500">
+            <div class="card__score">★ ${item.score}</div>
           </div>
-          <h2 class="card__title">${meta.title}</h2>
-          <p class="card__desc">${meta.desc}</p>
-          <div class="card__palette">
-            <div class="swatch"></div><div class="swatch"></div>
-            <div class="swatch"></div><div class="swatch"></div>
-            <div class="swatch"></div>
-            <span class="palette-label">提取色板</span>
+          <div class="card__color-bg"></div>
+          <div class="card__info">
+            <div class="card__title">${item.title}</div>
+            <div class="card__date">发行日期: ${item.date}</div>
+            <div class="card__tags">${item.tags.map(t=>`<span class="card__tag">${t}</span>`).join("")}</div>
+            <div class="card__desc">${item.desc}</div>
+            <button class="card__btn">预约</button>
           </div>
-        </div>
-      `;
-      const img = card.querySelector('img');
-      const sk  = card.querySelector('.card__skeleton');
-      img.onload = () => {
-        img.classList.add('loaded');
-        sk.style.opacity = '0';
-        requestAnimationFrame(() => {
-          const pal = extractPalette(img);
-          const idx = [...document.querySelectorAll('.card')].indexOf(card);
-          cardPalettes[idx] = pal;
-          paint(card, pal);
-          setTimeout(()=>sk.remove(), 400);
-        });
-      };
-      img.src = `https://picsum.photos/seed/${seed}/800/500`;
-      return card;
-    }
-
-    function render(seeds) {
-      const g = document.getElementById('grid');
-      g.innerHTML = '';
-      seeds.forEach((seed, i) => {
-        const c = makeCard(CARDS[i], seed);
-        c.style.cssText = 'opacity:0;transform:translateY(20px)';
-        g.appendChild(c);
-        setTimeout(() => {
-          c.style.transition = 'opacity .45s ease, transform .45s cubic-bezier(.22,1,.36,1)';
-          c.style.opacity = '1';
-          c.style.transform = 'translateY(0)';
-        }, i * 80);
+        `;
+        grid.appendChild(card);
+        const img = card.querySelector("img");
+        img.onload = () => {
+          const c = extract(img);
+          card.querySelector(".card__color-bg").style.background = `radial-gradient(ellipse at 50% 100%, rgba(${c.join(",")},0.6) 0%, transparent 100%)`;
+          card.style.borderColor = `rgba(${c.join(",")},0.3)`;
+        };
       });
     }
 
-    function loadNew() {
-      setIdx = (setIdx+1) % SEEDS.length;
-      const btn = document.getElementById('btnRefresh');
-      btn.classList.add('spinning');
-      render(SEEDS[setIdx]);
-      setTimeout(()=>btn.classList.remove('spinning'), 700);
+    function extract(img) {
+      const cv = document.getElementById("extraction-canvas");
+      const cx = cv.getContext("2d");
+      cv.width = 50; cv.height = 30;
+      cx.drawImage(img, 0, 0, 50, 30);
+      const d = cx.getImageData(0, 0, 50, 30).data;
+      let r=0, g=0, b=0;
+      for(let i=0; i<d.length; i+=4) { r+=d[i]; g+=d[i+1]; b+=d[i+2]; }
+      const n = d.length/4;
+      return [Math.round(r/n), Math.round(g/n), Math.round(b/n)];
     }
 
-    const tip = document.getElementById('tip');
-    document.addEventListener('mouseover', e => {
-      const sw = e.target.closest('.swatch');
-      if (!sw?.dataset.hex) return;
-      const h = sw.dataset.hex;
-      tip.textContent = h.toUpperCase();
-      tip.style.background = h;
-      const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16);
-      tip.style.color = (0.299*r+0.587*g+0.114*b)/255 > 0.5 ? '#000' : '#fff';
-      tip.classList.add('show');
-    });
-    document.addEventListener('mousemove', e => {
-      if (!tip.classList.contains('show')) return;
-      tip.style.left = (e.clientX+12)+'px';
-      tip.style.top  = (e.clientY-34)+'px';
-    });
-    document.addEventListener('mouseout', e => {
-      if (e.target.closest('.swatch')) tip.classList.remove('show');
-    });
-
-    render(SEEDS[setIdx]);
-  </script>
-</body></html>
+    render();
+  <\/script>
+</body>
+</html>
